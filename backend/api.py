@@ -253,8 +253,14 @@ async def log_requests_middleware(request: Request, call_next):
         raise
 
 # Define allowed origins based on environment
-allowed_origins = ["https://www.kortix.com", "https://kortix.com"]
+allowed_origins = ["https://suna-new.vercel.app", "https://kortix.com"]
 allow_origin_regex = None
+
+# Add FRONTEND_URL_ENV if set (for custom deployments)
+if config.FRONTEND_URL_ENV:
+    frontend_url = config.FRONTEND_URL_ENV.rstrip('/')
+    if frontend_url not in allowed_origins:
+        allowed_origins.append(frontend_url)
 
 # Add staging-specific origins
 if config.ENV_MODE == EnvMode.LOCAL:
